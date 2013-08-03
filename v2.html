@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Drag and Drop Canvas V.2</title>
+	<link rel="stylesheet" type="text/css" href="style/global.css">
+</head>
+<body>
+	<div class="Wraper">
+  		<h2 class="Three-Dee">Prototipado</h2>
+		<canvas id='c' width='600' height='600'></canvas>
+		<br>
+		<input type="file" id="i" /> |||
+		<input type="button" onclick="engin.loadImg('i');" value="Cargar">
+		<h4><a href="Index.html">&lt;&lt;&lt; Volver </a></h4>
+		<script src="src/dndcanvas_v2.js"></script>
+		<script>
+	    	var engin = new Engine(document.getElementById('c'));
+	    	engin.start();
+	    </script>
+    </div>
+</body>
+</html>
