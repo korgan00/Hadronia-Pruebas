@@ -27,7 +27,18 @@ Engine.prototype.step = function (){
 Engine.prototype.loadImg = function (id){
 	this.eventMan.loadImg(id);
 };
-
+Engine.prototype.float = function (){
+	this.model.float();
+};
+Engine.prototype.sink = function (){
+	this.model.sink();
+};
+Engine.prototype.floatMax = function (){
+	this.model.floatMax();
+};
+Engine.prototype.sinkMax = function (){
+	this.model.sinkMax();
+};
 
 
 /**************************************************/
@@ -53,7 +64,6 @@ EventManager.prototype.setMouseEventsToCanvas = function (canvas){
 	canvas.oncontextmenu = this.contextMenu;
 };
 EventManager.prototype.step = function () {};
-
 EventManager.prototype.loadImg = function (id) {
 	var url = document.getElementById(id).files[0];
 	var img = new Image;
@@ -130,12 +140,40 @@ Renderer.prototype.step = function () {
 	this.clear();
 	
 	images = this.model.images;
+
+	this.drawGrid();
 	
 	for (var i = 0; i < images.length; i++) {
-		this.ctx.drawImage(images[i].image, images[i].pos[X], images[i].pos[Y]);
+		var img = images[i];
+		if(this.model.isLastDraggedShape(images[i])){
+			this.ctx.beginPath();
+			this.ctx.rect(img.pos[X], img.pos[Y], img.image.width, img.image.height);
+			this.ctx.lineWidth = 2;
+			this.ctx.strokeStyle = '#00FF00';
+			this.ctx.stroke();
+			this.ctx.closePath();
+		}
+		this.ctx.drawImage(img.image, img.pos[X], img.pos[Y]);
 	}
 };
+Renderer.prototype.drawGrid = function (){
+	var DIVS_SIZE = 100,//px 
+		CANVAS_SIZE = 600,
+		MAX_DIVS = Math.floor(CANVAS_SIZE/DIVS_SIZE);
 
+	this.ctx.beginPath();
+	this.ctx.strokeStyle = '#444444';
+	for(var i = 1; i < MAX_DIVS; i++){
+		this.ctx.moveTo(i*DIVS_SIZE, 0);
+		this.ctx.lineTo(i*DIVS_SIZE, CANVAS_SIZE);
+	}
+	for(var j = 1; j < MAX_DIVS; j++){
+		this.ctx.moveTo(0, j*DIVS_SIZE);
+		this.ctx.lineTo(CANVAS_SIZE, j*DIVS_SIZE);
+	}
+	this.ctx.stroke();
+	this.ctx.closePath();
+};
 
 
 
@@ -146,20 +184,20 @@ Renderer.prototype.step = function () {
 function Model(){
 	this.images = [];
 	this.draggedShape = null;
-	this.lastDraggedShape = null;
+	this.lastDraggedShapePos = null;
 }
 Model.prototype.step = function (){};
 Model.prototype.startDragging = function (x, y) {
-	//Supongo las imagenes ordenadas en z de mas profundo a menos.
 	for (var i = this.images.length-1; i >= 0; i--) {
 		if( this.images[i].isHovered(x, y)) {
 			this.draggedShape = this.images[i];
-			this.lastDraggedShape = this.draggedShape;
+			this.lastDraggedShapePos = i;
 			break;
 		}
 	}
 };
 Model.prototype.stopDragging = function () {
+	this.sticky();
 	this.draggedShape = null;
 };
 Model.prototype.mouseMove = function (xIncr, yIncr) {
@@ -169,6 +207,68 @@ Model.prototype.mouseMove = function (xIncr, yIncr) {
 Model.prototype.addImg = function (img){
 	this.images.push(img);
 };
+Model.prototype.isLastDraggedShape = function (img){
+	return this.images[this.lastDraggedShapePos] === img;
+};
+
+Model.prototype.float = function (){
+	if(this.lastDraggedShapePos !== this.images.length-1 ){
+		var img = this.images[this.lastDraggedShapePos];
+		this.images[this.lastDraggedShapePos] = 
+				this.images[this.lastDraggedShapePos+1];
+		this.images[this.lastDraggedShapePos+1] = img;
+		this.lastDraggedShapePos++;
+	}
+};
+Model.prototype.sink = function (){
+	if(this.lastDraggedShapePos !== 0){
+		var img = this.images[this.lastDraggedShapePos];
+		this.images[this.lastDraggedShapePos] = 
+				this.images[this.lastDraggedShapePos-1];
+		this.images[this.lastDraggedShapePos-1] = img;
+		this.lastDraggedShapePos--;
+	}
+};
+Model.prototype.floatMax = function (){
+	while(this.lastDraggedShapePos !== this.images.length-1){
+		this.float();
+	}
+};
+Model.prototype.sinkMax = function (){
+	while(this.lastDraggedShapePos !== 0){
+		this.sink();
+	}
+};
+Model.prototype.sticky = function(){
+	var x = this.draggedShape.pos[X],
+		y = this.draggedShape.pos[Y],
+		newPos = this.nearestPoint(x, y);
+	
+	this.draggedShape.pos[X] = newPos[X];
+	this.draggedShape.pos[Y] = newPos[Y];
+};
+Model.prototype.nearestPoint = function(x,y){
+	var nearX = 0, nearY = 0,
+		xDivs = 0, yDivs = 0,
+		DIVS_SIZE = 100,//px 
+		CANVAS_SIZE = 600,
+		MAX_DIVS = Math.floor(CANVAS_SIZE/DIVS_SIZE) -1;
+	
+	xDivs = Math.round(x/DIVS_SIZE);
+	yDivs = Math.round(y/DIVS_SIZE);
+	
+	if( xDivs < 0 ) xDivs = 0;
+	else if (xDivs >= MAX_DIVS) xDivs = MAX_DIVS;
+
+	if( yDivs < 0 ) yDivs = 0;
+	else if (yDivs >= MAX_DIVS) yDivs = MAX_DIVS;
+	
+	nearX = xDivs * DIVS_SIZE;
+	nearY = yDivs * DIVS_SIZE;
+	
+	return [nearX, nearY];
+};
+
 function ImageShape(img){
 	this.pos = [0,0];
 	this.image = img;

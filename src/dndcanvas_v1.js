@@ -3,13 +3,14 @@ var images = [];
 var canvas = document.getElementById('c');
 var ctx = document.getElementById('c').getContext('2d');
 var TIME_INTERVAL = 10;//ms
+var CANVAS_BORDER = 2;
 var lastMouseX = 0;
 var lastMouseY = 0;
 var actualMouseX = 0;
 var actualMouseY = 0;
 var draggingShape = null;
-var offsetX = canvas.offsetLeft + 2;
-var offsetY = canvas.offsetTop + 2;
+var offsetX = canvas.offsetLeft + CANVAS_BORDER;
+var offsetY = canvas.offsetTop + CANVAS_BORDER;
 
 var X = 0;
 var Y = 1;

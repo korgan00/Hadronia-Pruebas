@@ -6,13 +6,19 @@
 </head>
 <body>
 	<div class="Wraper">
-  		<h2 class="Three-Dee">Prototipado</h2>
+  		<h2 class="Three-Dee">Funciones B&aacute;sicas y Sticky</h2>
 		<canvas id='c' width='600' height='600'></canvas>
+  		<div class = "Tool-Palete">
+			<input type="button" class="in" onclick="engin.floatMax();" value="Traer al frente">
+			<input type="button" class="in" onclick="engin.float();" value="Flotar">
+			<input type="button" class="in" onclick="engin.sinkMax();" value="Llevar al fondo">
+			<input type="button" class="in" onclick="engin.sink();" value="Hundir">
+		</div>
 		<br>
 		<input type="file" class="in" id="i" /> |||
 		<input type="button" class="in"  onclick="engin.loadImg('i');" value="Cargar">
 		<h4><a href="Index.html">&lt;&lt;&lt; Volver </a></h4>
-		<script src="src/dndcanvas_v2.js"></script>
+		<script src="src/dndcanvas_v3.js"></script>
 		<script>
 	    	var engin = new Engine(document.getElementById('c'));
 	    	engin.start();
