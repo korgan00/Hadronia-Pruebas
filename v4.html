@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Drag and Drop Canvas V.2</title>
+	<link rel="stylesheet" type="text/css" href="style/global.css">
+</head>
+<body>
+	<div class="Wraper">
+  		<h2 class="Three-Dee">Funciones B&aacute;sicas y Sticky</h2>
+  		<div class="canvasWraper">
+			<canvas id='c' width='600' height='600'></canvas>
+		</div>
+  		<div class = "Tool-Palete">
+			<input type="button" class="in" onclick="engin.floatMax();" value="Traer al frente">
+			<input type="button" class="in" onclick="engin.float();" value="Flotar">
+			<input type="button" class="in" onclick="engin.sinkMax();" value="Llevar al fondo">
+			<input type="button" class="in" onclick="engin.sink();" value="Hundir">
+		</div>
+		<br>
+		<input type="file" class="in" id="i" /> |||
+		<input type="button" class="in"  onclick="engin.loadImg('i','gridAdjustCheck');" value="Cargar">
+		<br>
+		<input type="checkbox" class="in" id="gridAdjustCheck" name="gridAdjustCheck"/>
+		<label for="gridAdjustCheck">Ajustar al Grid</label> 
+		<h4><a href="Index.html">&lt;&lt;&lt; Volver </a></h4>
+		<script src="src/dndcanvas_v4.js"></script>
+		<script>
+	    	var engin = new Engine(document.getElementById('c'));
+	    	engin.start();
+	    </script>
+    </div>
+</body>
+</html>
