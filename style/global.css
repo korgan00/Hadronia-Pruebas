@@ -8,7 +8,9 @@ body{
 canvas{
 	border: solid 2px black;
 }
-
+.canvasWraper{
+	display: inline-block;
+}
 .Tool-Palete{
 	background-color:#c75f5d;
     border:1px solid #241d13;

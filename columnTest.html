@@ -7,13 +7,15 @@
 </head>
 <body>
 	<div class="Wraper">
-  		<h2 class="Three-Dee">Prototipado</h2>
-		<canvas id='c' width='600' height='600'></canvas>
-		<br>
-		<input type="file" class="in" id="i" /> |||
-		<input type="button" class="in"  onclick="engin.loadImg('i');" value="Cargar">
+  		<h2 class="Three-Dee"> Creador de columnas </h2>
+  		<div class="canvasWraper">
+			<canvas id='c' width='600' height='600'></canvas>
+		</div>
+  		<div class = "Tool-Palete">
+			<input type="button" class="in" onclick="alert('¿Qué no entiendes? \n¿\'DIS\' o \'ABLED\'?');" value="DISABLED">
+		</div>
 		<h4><a href="Index.html">&lt;&lt;&lt; Volver </a></h4>
-		<script src="src/dndcanvas_v2.js"></script>
+		<script src="src/column_v2.js"></script>
 		<script>
 	    	var engin = new Engine(document.getElementById('c'));
 	    	engin.start();
